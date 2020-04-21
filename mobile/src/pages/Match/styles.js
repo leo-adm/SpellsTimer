@@ -16,43 +16,4 @@ export default StyleSheet.create({
         color:"black",
         marginBottom:40
     },
-
-    playerBox:{
-        marginBottom:5,
-        flexDirection:"row"        
-    },
-    
-    championImage:{
-        width:105,
-        height:105,
-        marginRight:5
-    },
-
-    spells:{
-        justifyContent:"space-between",
-        height:105
-    },
-
-    spellbox:{
-        alignItems:"center",
-        flexDirection:"row"
-    },
-
-    spellOn:{
-        width:50,
-        height:50,
-        opacity:0.3
-    },
-
-    spellOff:{
-        width:50,
-        height:50,
-        opacity:1
-    },
-
-    timer:{
-        marginLeft:10,
-        fontSize:24,
-        fontWeight:"900"
-    }
 })

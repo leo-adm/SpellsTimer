@@ -20,7 +20,6 @@ export default StyleSheet.create({
     searchView:{
         alignItems:"center",
         backgroundColor:"#6200ee",
-        borderRadius:8,
         padding:24
     },
 

@@ -22,44 +22,44 @@ async function getSpellsData(){
     return spellData;
 };
 
-var championsData;
-var spellsData;
-
-async function load(){
-    this.championsData = await getChampionsData();
-    this.spellsData = await getSpellsData();
+function getChampImage(champId, championsData){
+    let championName;
+    for (var i in championsData) {
+        if (championsData[i].key == champId) {
+            championName = championsData[i].id
+            break;
+        }
+    }
+    return { uri: "http://ddragon.leagueoflegends.com/cdn/10.7.1/img/champion/" + championName + ".png" }
 }
 
-load();
+function getSpellImage(spellId, spellsData){
+    let spellName;
+    for (var i in spellsData) {
+        if (spellsData[i].key == spellId) {
+            spellName = spellsData[i].id
+            break;
+        }
+    }
+    return { uri: "http://ddragon.leagueoflegends.com/cdn/10.7.1/img/spell/" + spellName + ".png" }
+}
+
+function getSpellCooldown(spellId, spellsData){
+    let spellCooldown;
+    for (var i in spellsData) {
+        if (spellsData[i].key == spellId) {
+            spellCooldown = spellsData[i].cooldown[0];
+        }
+    }
+    return spellCooldown;
+}
 
 const api = {
-    // championsData: this.championsData,
-    // spellsData: this.spellsData,
-
-    getChampImage: (champId) => {
-        let championName;
-        for (var i in championsData) {
-            if (championsData[i].key == champId) {
-                championName = championsData[i].id
-                break;
-            }
-        }
-        return { uri: "http://ddragon.leagueoflegends.com/cdn/10.7.1/img/champion/" + championName + ".png" }
-    },
-
-    getSpellImage: (spellId) => {
-        let spellName;
-        for (var i in spellsData) {
-            if (spellsData[i].key == spellId) {
-                spellName = spellsData[i].id
-                break;
-            }
-        }
-        return { uri: "http://ddragon.leagueoflegends.com/cdn/10.7.1/img/spell/" + spellName + ".png" }
-    }
+    getChampionsData,
+    getSpellsData,
+    getChampImage,
+    getSpellImage,
+    getSpellCooldown
 }
-
-api["championsData"] = championsData;
-api["spellsData"] = spellsData;
 
 export default api;

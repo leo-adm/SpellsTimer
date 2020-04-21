@@ -3,76 +3,72 @@ import { View, Text, TextInput, TouchableOpacity} from "react-native";
 import { useNavigation } from "@react-navigation/native"
 
 import styles from "./styles"
+import api from "../../services/api"
+import sample from "../../services/sampleMatch"
+
+var championsData;
+var spellsData;
+
+loadData = async() => {
+    championsData = await api.getChampionsData();
+    spellsData = await api.getSpellsData();
+}
+
+loadData();
 
 export default function Home(){
     const navigation = useNavigation();
-
     const [nickname, setNickname] = useState("");
+    const apikey = "RGAPI-24aff48e-e564-408e-903d-3c401a64ce50"
 
-    const apikey = "RGAPI-9f2399d9-5fca-4ae8-a047-964d98da912d"
-
-    async function goToMatch(){
-        const player = await getPlayer();
-        if(player.id === undefined){
-            alert("Player não encontrado")
+    async function GoToMatch(){
+        if(nickname == ""){
+            alert("Type something!");
+            return;
+        }
+        const player = await GetPlayer();
+        if(player === undefined){
             return;
         }
 
-        const championsData = await getChampionsData();
-        const spellsData = await getSpellsData();
-        
-        var players;
-        const url = "https://br1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/"+ player.id + "?api_key=" + apikey
-        await fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                players = data.participants;                
-            })
-            .catch(() => {})
-        if(players !== undefined){
-            navigation.navigate("Match", {players, player, championsData, spellsData});
+        const url = "https://br1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/"+ player.id
+        const response = await fetch(url, { headers: {"X-Riot-Token": apikey} })
+        const data = await response.json()
+        const players = data.participants;
+        if(players === undefined){
+            alert("Player not playing.")
+            return;
         }
-        else{
-            alert("Player não está jogando.")
-        }
+
+        navigation.navigate("Match", {players, player, championsData, spellsData});        
     }
 
-    async function getPlayer(){
-        const url = "https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nickname + "?api_key=" + apikey
-        var player = []
-        await fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                player = data;
-            })
-            .catch(() => {})
-        return player;
+    async function GetPlayer(){
+        const url = "https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nickname
+        const response = await fetch(url, { headers: {"X-Riot-Token": apikey} })
+        let data;
+        switch(response.status){
+            case 404:
+                alert("Player not found!");
+                break;
+            case 403:
+                alert("Not valid API-Key");
+                break;
+            case 200:
+                data = await response.json();
+                break;
+        }
+        return data;
     };
 
-    async function getChampionsData(){
-        const url = "http://ddragon.leagueoflegends.com/cdn/10.7.1/data/pt_BR/champion.json"
-        var champData;
-        await fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                champData = data.data;
-            })
-            .catch(() => {})
-        return champData
-    };
+    async function GoToSample(){
+        let players = sample.sampleMatch.participants
+        let player = sample.samplePlayer
+        let championsData = await api.getChampionsData();
+        let spellsData = await api.getSpellsData();
 
-    async function getSpellsData(){
-        const url = "http://ddragon.leagueoflegends.com/cdn/10.7.1/data/pt_BR/summoner.json"
-        var spellData;
-        await fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                spellData = data.data;
-            })
-            .catch(() => {})
-        return spellData;
-    };
-
+        navigation.navigate("Match", {players, player, championsData, spellsData});
+    }
 
     return (
         <View style={styles.container}>
@@ -82,15 +78,20 @@ export default function Home(){
             {/* SEARCH */}
             <View style={styles.searchView}>
                 <TextInput style={styles.searchInput}
-                    placeholder="Jogador"
+                    placeholder="Player"
                     placeholderTextColor="#ddd"
                     onChangeText={nickname => setNickname(nickname)}/>
                 <TouchableOpacity style={styles.searchButton}
-                    onPress={goToMatch}>
-                    <Text style={styles.searchButtonText}>Procurar partida</Text>
+                    onPress={GoToMatch}>
+                    <Text style={styles.searchButtonText}>Search game</Text>
                 </TouchableOpacity>
             </View>
-        </View>
 
+            {/* TEST */}
+            <TouchableOpacity style={styles.searchButton}
+                onPress={GoToSample}>
+                <Text style={styles.searchButtonText}>Try Sample</Text>
+            </TouchableOpacity>
+        </View>
     )
 }
