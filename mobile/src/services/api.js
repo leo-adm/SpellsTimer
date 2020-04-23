@@ -54,12 +54,22 @@ function getSpellCooldown(spellId, spellsData){
     return spellCooldown;
 }
 
+function HasCooldownRune(perkIds){
+    for(let i in perkIds){
+        if(perkIds[i] == 8347){ //ID from Cosmic Insight Rune
+            return true
+        }
+    }
+    return false
+}
+
 const api = {
     getChampionsData,
     getSpellsData,
     getChampImage,
     getSpellImage,
-    getSpellCooldown
+    getSpellCooldown,
+    HasCooldownRune
 }
 
 export default api;

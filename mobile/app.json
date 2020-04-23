@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SumTime",
-    "slug": "sumtime",
+    "name": "SpellTimer",
+    "slug": "spelltimer",
     "platforms": [
       "ios",
       "android",
@@ -13,7 +13,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#6200ee"
+      "backgroundColor": "#31393E"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

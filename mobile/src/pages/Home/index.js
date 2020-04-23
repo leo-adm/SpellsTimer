@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity} from "react-native";
+import { View, Image, Text, TextInput, TouchableOpacity} from "react-native";
 import { useNavigation } from "@react-navigation/native"
 
 import styles from "./styles"
 import api from "../../services/api"
 import sample from "../../services/sampleMatch"
+import logo from "../../assets/logo.png"
 
 var championsData;
 var spellsData;
@@ -19,7 +20,7 @@ loadData();
 export default function Home(){
     const navigation = useNavigation();
     const [nickname, setNickname] = useState("");
-    const apikey = "RGAPI-24aff48e-e564-408e-903d-3c401a64ce50"
+    const apikey = ""
 
     async function GoToMatch(){
         if(nickname == ""){
@@ -73,7 +74,7 @@ export default function Home(){
     return (
         <View style={styles.container}>
             {/* HEADER */}
-            <Text style={styles.pageTitle}>SpellCounter</Text>
+            <Image source={logo} style={styles.logo}/>
 
             {/* SEARCH */}
             <View style={styles.searchView}>

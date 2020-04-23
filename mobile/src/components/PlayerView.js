@@ -1,16 +1,43 @@
-import React from "react"
-import { View, Image } from "react-native"
+import React, { useState } from "react"
+import { View, Image, TouchableOpacity } from "react-native"
+
 import SpellView from "./SpellView"
+import CooldownRuneImage from "../assets/CDRRune.png"
+import CooldownBootImage from "../assets/CDRBoot.png"
 
 function PlayerView({player}){
+    const [cdr, setCdr] = useState(player.hasCooldownRune ? 0.05 : 0)
+    const [hasBoots, setHasBoot] = useState(false);
+
+    function ToggleBoot(){
+        if(hasBoots){
+            setCdr(cdr - 0.1);
+        }
+        else{
+            setCdr(cdr + 0.1);
+        }
+        setHasBoot(!hasBoots);
+    }
+
     return (
         <View style={styles.playerBox}>
-            <Image source={player.championSource} style={styles.championImage}/>
+            <View style={styles.championImageContainer}>
+                <Image source={player.championSource} style={styles.championImage}/>
 
-            <View style={styles.spells}>
-                <SpellView spell={player.spell1}/>
-                <SpellView spell={player.spell2}/>
-            </View>                 
+                <Image source={CooldownRuneImage} style={player.hasCooldownRune ? styles.cooldownRune : {display:"none"}} />
+
+                <TouchableOpacity 
+                    onPress={ToggleBoot}>                
+                    <Image source={CooldownBootImage} style={hasBoots ? styles.cooldownBoot : {...styles.cooldownBoot, opacity:0.3} }/>                 
+                </TouchableOpacity>
+
+            </View>
+
+            <View style={styles.spellsContainer}>
+                <SpellView spellSource={player.spell1.source} cooldown={player.spell1.cooldown} cdr={cdr}/>
+                <SpellView spellSource={player.spell2.source} cooldown={player.spell2.cooldown} cdr={cdr}/>
+            </View>
+
         </View>
     )
 }
@@ -18,7 +45,12 @@ function PlayerView({player}){
 const styles = {
     playerBox:{
         marginBottom:5,
-        flexDirection:"row"        
+        flexDirection:"row"
+    },
+
+    championImageContainer:{
+        display:"block",
+        flexDirection:"column",
     },
     
     championImage:{
@@ -27,10 +59,26 @@ const styles = {
         marginRight:5
     },
 
-    spells:{
+    spellsContainer:{
         justifyContent:"space-between",
         height:105
-    }
+    },
+
+    cooldownRune:{
+        position:"absolute",
+        width:30,
+        height:30,
+        top:4,
+        left:3
+    },
+
+    cooldownBoot:{
+        position:"absolute",
+        height:30,
+        width:30,
+        bottom:4,
+        left:4,
+    },
 }
 
 export default PlayerView

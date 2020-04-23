@@ -6,14 +6,13 @@ export default StyleSheet.create({
         flex:1,
         paddingHorizontal: 24,
         paddingTop: Constants.statusBarHeight + 20,
-        backgroundColor:"#eee"
+        backgroundColor:"#31393E"
     },
 
-    pageTitle:{
-        textAlign:"center",
-        fontSize: 32,
-        fontWeight:"800",
-        color:"black",
-        marginBottom:40
-    },
+    logo:{
+        alignSelf:"center",
+        height:60,
+        width:120,
+        marginBottom:20
+    }
 })

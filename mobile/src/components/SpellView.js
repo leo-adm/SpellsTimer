@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react"
-import { View, Image, Text, TouchableOpacity} from "react-native"
+import { View, Image, Text, TouchableOpacity, TouchableWithoutFeedback} from "react-native"
 
 const formatMin = number => `0${number}`.slice(-1);
 const formatSec = number => `0${number}`.slice(-2);
@@ -10,18 +10,15 @@ const getRemaining = (time) => {
     return { mins: formatMin(mins), secs: formatSec(secs) };
 }
 
-function SpellView({spell}){
-    const [remainingSecs, setRemainingSecs] = useState(spell.cooldown);
+function SpellView({spellSource, cooldown, cdr}){
+
+    const [remainingSecs, setRemainingSecs] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const { mins, secs } = getRemaining(remainingSecs);
 
-    toggle = () => {
+    startCountdown = () => {
+        setRemainingSecs(parseInt(cooldown * (1 - cdr)))
         setIsActive(!isActive);
-    }
-
-    reset = () => {
-        setRemainingSecs(spell.cooldown);
-        setIsActive(false);
     }
 
     useEffect(() => {
@@ -30,8 +27,8 @@ function SpellView({spell}){
         if (isActive) {
             interval = setInterval(() => {
                 setRemainingSecs(remainingSecs => remainingSecs - 1);
-                if(remainingSecs === 0){
-                    reset();
+                if(remainingSecs <= 0){
+                    setIsActive(false);
                 }
             }, 1000);
         } else if (!isActive && remainingSecs !== 0) {
@@ -41,14 +38,25 @@ function SpellView({spell}){
         return () => clearInterval(interval);
     }, [isActive, remainingSecs]);
 
+    handleDecrease = () => {
+        if(isActive && remainingSecs > 5){
+            setRemainingSecs(remainingSecs - 5);
+        }
+    }
+
     return (
         <View style={styles.spellbox}>
-            <TouchableOpacity style={styles.spellImage} onPress={toggle} disabled={isActive}>
-                <Image source={spell.source} style={isActive? styles.spellOn : styles.spellOff}/>
-                {/* <Image source={spell.source} style={styles.spellFilter}/> */}
+            <TouchableOpacity onPress={startCountdown} disabled={isActive}>
+                <Image source={spellSource} style={isActive? styles.spellOn : styles.spellOff}/>
             </TouchableOpacity>
 
-            <Text style={styles.timer}>{isActive? `${mins}:${secs}` : ""}</Text> 
+            <Text style={styles.timer}>{isActive? `${mins}:${secs}` : ""}</Text>
+
+            <TouchableOpacity
+                onPress={handleDecrease}
+                style={isActive ? {display:"flex", alignItems:"center"} : {display:"none"}}>
+                <Text style={styles.decreaseButton}>+</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -62,7 +70,7 @@ const styles = {
     spellOn:{
         width:50,
         height:50,
-        opacity:0.3
+        opacity:0.2
     },
 
     spellOff:{
@@ -72,9 +80,20 @@ const styles = {
     },
 
     timer:{
-        marginLeft:10,
+        marginLeft:15,
         fontSize:24,
-        fontWeight:"900"
+        fontWeight:"800",
+        color:"white"
+    },
+
+    decreaseButton:{
+        color:"white",
+        fontSize:32,
+        fontWeight:"800",
+        width:32,
+        textAlign:"center",
+        marginLeft:5,
+        marginBottom:5
     }
 }
 

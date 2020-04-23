@@ -4,6 +4,7 @@ import { useRoute } from "@react-navigation/native"
 
 import styles from "./styles"
 import api from "../../services/api"
+import logo from "../../assets/logo.png"
 
 import PlayerView from "../../components/PlayerView"
 
@@ -36,7 +37,8 @@ export default function Match(){
                 spell2: {
                     source: api.getSpellImage(players[i].spell2Id, spellsData),
                     cooldown: api.getSpellCooldown(players[i].spell2Id, spellsData)
-                }
+                },
+                hasCooldownRune: api.HasCooldownRune(players[i].perks.perkIds)
             })
         }
     }
@@ -44,7 +46,8 @@ export default function Match(){
     return (
         <View style={styles.container}>
             {/* HEADER */}
-            <Text style={styles.pageTitle}>SpellCounter</Text>
+            {/* <Text style={styles.pageTitle}>SpellCounter</Text> */}
+            <Image source={logo} style={styles.logo}/>
 
             {/* SUMMONERS */}
             <FlatList

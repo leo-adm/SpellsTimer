@@ -6,20 +6,19 @@ export default StyleSheet.create({
         flex:1,
         paddingHorizontal: 24,
         paddingTop: Constants.statusBarHeight + 20,
-        backgroundColor:"#eee"
+        backgroundColor:"#31393E"
     },
 
-    pageTitle:{
-        textAlign:"center",
-        fontSize: 32,
-        fontWeight:"800",
-        color:"black",
-        marginBottom:40
+    logo:{
+        alignSelf:"center",
+        height:60,
+        width:120,
+        marginBottom:20
     },
 
     searchView:{
         alignItems:"center",
-        backgroundColor:"#6200ee",
+        backgroundColor:"#282F33",
         padding:24
     },
 
@@ -34,12 +33,13 @@ export default StyleSheet.create({
     },
 
     searchButton:{
-        backgroundColor:"#03dac6",
+        backgroundColor:"#FF9000",
         paddingVertical:10,
         paddingHorizontal:20,
     },
 
     searchButtonText: {
+        color:"#FFF",
         fontSize:20,
         textAlign:"center",
         fontWeight:"bold",
