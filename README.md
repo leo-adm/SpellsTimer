@@ -1,4 +1,4 @@
-# SpellTimer
+# SpellsTimer
 An application for League of Legends players
 
 This app is designed to help players count the cooldown of enemies spells.
